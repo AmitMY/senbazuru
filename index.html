@@ -189,20 +189,23 @@
   });
 
 
-  const firstInteractionListener = () => {
-    if (window.DeviceOrientationEvent) {
-      window.DeviceOrientationEvent.requestPermission().then((response) => {
-        if (response === 'granted') {
-          controls = new THREE.DeviceOrientationControls(camera);
-        }
-      }).catch((error) => {
-        alert('THREE.DeviceOrientationControls: Unable to use DeviceOrientation API:' + error.message);
+  if (window.DeviceOrientationEvent) {
+    const firstInteractionListener = () => {
+      requestAnimationFrame(() => {
+        window.DeviceOrientationEvent.requestPermission().then((response) => {
+          if (response === 'granted') {
+            window.removeEventListener('touchend', firstInteractionListener);
+            controls = new THREE.DeviceOrientationControls(camera);
+          }
+        }).catch((error) => {
+          console.log('THREE.DeviceOrientationControls: Unable to use DeviceOrientation API', error);
+        });
       });
-    }
-    window.removeEventListener('click', firstInteractionListener);
-  };
-  window.addEventListener('click', firstInteractionListener);
-
+    };
+    window.addEventListener('touchend', firstInteractionListener);
+  } else {
+    alert("no DeviceOrientationEvent")
+  }
 </script>
 
 </body>
