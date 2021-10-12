@@ -150,13 +150,18 @@
   });
 
 
-  window.DeviceOrientationEvent.requestPermission().then(function (response) {
-    if (response === 'granted') {
-      controls = new THREE.DeviceOrientationControls(camera);
-    }
-  }).catch(function (error) {
-    alert('THREE.DeviceOrientationControls: Unable to use DeviceOrientation API:' + error.message);
-  });
+  const firstInteractionListener = () => {
+    window.DeviceOrientationEvent.requestPermission().then((response) => {
+      if (response === 'granted') {
+        controls = new THREE.DeviceOrientationControls(camera);
+      }
+    }).catch((error) => {
+      alert('THREE.DeviceOrientationControls: Unable to use DeviceOrientation API:' + error.message);
+    });
+    window.removeEventListener('click', firstInteractionListener);
+  };
+  window.addEventListener('click', firstInteractionListener);
+
 </script>
 
 </body>
